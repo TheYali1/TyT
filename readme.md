@@ -1,5 +1,14 @@
 ![TyT Logo1](https://raw.githubusercontent.com/TheYali1/TyT/refs/heads/main/TyT.png)
 
+<div align="center">
+  
+[![Last Commit](https://img.shields.io/github/last-commit/TheYali1/TyT?style=for-the-badge&label=Last%20Commit)](https://github.com/TheYali1/TyT/pulse/monthly)
+[![Commits](https://img.shields.io/github/commit-activity/m/TheYali1/TyT?label=Commits&style=for-the-badge)](https://github.com/TheYali1/TyT/commits "היסטוריית קומיטים")
+[![License](https://img.shields.io/github/license/TheYali1/TyT?label=License&style=for-the-badge)](https://github.com/TheYali1/TyT/blob/main/LICENSE)
+[![Stars](https://img.shields.io/github/stars/TheYali1/TyT?style=for-the-badge)](https://github.com/TheYali1/TyT/stargazers)
+
+</div>
+
 # **TyT \- To Youtube 🎬**
 
 Welcome to TyT (To Youtube), the tool that lets you download videos and audio from YouTube for free. 💯
