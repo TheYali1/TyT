@@ -33,8 +33,8 @@ For everything to run smoothly, you need to make sure that the **yt-dlp.exe** fi
 
 If something's not working, try these things:
 
-* **Check Connection:**
-* **Update yt-dlp:**
+* **Check Connection**
+* **Update yt-dlp**
 * **Update TyT**
 
 ## **Credits 🙏**
