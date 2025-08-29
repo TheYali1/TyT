@@ -6,6 +6,7 @@
 [![Commits](https://img.shields.io/github/commit-activity/m/TheYali1/TyT?label=Commits&style=for-the-badge)](https://github.com/TheYali1/TyT/commits "היסטוריית קומיטים")
 [![License](https://img.shields.io/github/license/TheYali1/TyT?label=License&style=for-the-badge)](https://github.com/TheYali1/TyT/blob/main/LICENSE)
 [![Stars](https://img.shields.io/github/stars/TheYali1/TyT?style=for-the-badge)](https://github.com/TheYali1/TyT/stargazers)
+[![Created At](https://img.shields.io/github/created-at/TheYali1/TyT?style=for-the-badge&label=Created)](https://github.com/TheYali1/TyT)
 
 </div>
 
