@@ -43,4 +43,7 @@ If something's not working, try these things:
 * **Development:** Yali  
 * **Engine:** [yt-dlp](https://github.com/yt-dlp/yt-dlp)
 
+## **Support 🖼️**
+* **https://github.com/yt-dlp/yt-dlp/blob/master/supportedsites.md**
+
 Enjoy\! 😊
