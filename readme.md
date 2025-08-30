@@ -26,6 +26,8 @@ TyT is a compact program I built using batch, designed for all of you. It's powe
 4. **Choose Format:** After you paste the link, the program will ask if you want to download the video with **Video \+ Audio** or just the **Audio** (MP3). Choose what you want.  
 5. **Download:** That's it. Let the program do its thing. The file will be saved to the same folder where the **Main.bat** file is located.
 
+![TyTVideo](https://github.com/TheYali1/TyT/blob/main/TyTVideo.gif?raw=true)
+
 ## **What do you need? 💻**
 
 For everything to run smoothly, you need to make sure that the **yt-dlp.exe** file is in the same folder as the **Main.bat** file\!
