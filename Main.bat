@@ -4,6 +4,8 @@ title TyT - TheYali1
 chcp 65001 >nul
 :start
 cls
+yt-dlp -U
+cls
 echo.
 echo                    [38;2;255;0;0m--------------------------                            [38;2;255;0;0m--------------------------                
 ping localhost -n 1 >nul
