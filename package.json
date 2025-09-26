@@ -1,0 +1,33 @@
+{
+  "name": "tyt",
+  "version": "1.0.0",
+  "description": "To Youtube",  
+  "main": "main.js",
+  "productName": "TyT - To Youtube",
+  "author": "Yali",
+  "license": "ISC",
+  "scripts": {
+    "ss": "electron .",
+    "make": "electron-forge make"
+  },
+  "keywords": [
+    "electron",
+    "yt-dlp"
+  ],
+  "devDependencies": {
+    "@electron-forge/cli": "^7.4.0",
+    "@electron-forge/maker-squirrel": "^7.4.0",
+    "electron": "^31.0.0"
+  },
+  "config": {
+    "forge": {
+      "packagerConfig": {},
+      "makers": [
+        {
+          "name": "@electron-forge/maker-zip",
+          "platforms": ["win32"]
+        }
+      ]
+    }
+  }
+}

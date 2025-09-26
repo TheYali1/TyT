@@ -1,0 +1,760 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>TyT - To YouTube</title>
+    <link rel="icon" href="icon.png" type="image/png">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;700;900&display=swap">
+    <style>
+        :root {
+            --main-color: #b93d46;
+            --secondary-color: #ffffff;
+            --background-color: #121212;
+            --input-bg: #1e1e1e;
+            --modal-bg: #1a1a1a;
+            --transition-speed: 0.6s;
+            --timing-function: cubic-bezier(0.25, 0.8, 0.5, 1);
+        }
+        
+        body { 
+            font-family: 'Heebo', sans-serif; 
+            background-color: var(--background-color); 
+            color: var(--secondary-color); 
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+
+        body.light-mode {
+            --main-color: #b93d46;
+            --secondary-color: #333333;
+            --background-color: #f0f0f0;
+            --input-bg: #ffffff;
+            --modal-bg: #ffffff;
+        }
+
+        body.light-mode .container {
+            background-color: #ffffff;
+            box-shadow: 0 0 30px rgba(185, 61, 70, 0.4);
+        }
+        
+        body.light-mode #output {
+            background-color: #f8f8f8;
+            border: 1px solid #ccc;
+        }
+        
+        body.light-mode #metadata-display {
+             background-color: #f8f8f8;
+             border: 1px solid #ccc;
+             color: var(--secondary-color);
+        }
+
+        .container {
+            width: 750px;
+            padding: 30px;
+            background-color: var(--modal-bg);
+            border-radius: 10px;
+            box-shadow: 0 0 30px rgba(185, 61, 70, 0.4); 
+            transition: all 0.3s var(--timing-function);
+            opacity: 0;
+            transform: scale(0.95);
+            animation: fadeInScale var(--transition-speed) var(--timing-function) forwards;
+        }
+
+        @keyframes fadeInScale {
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        @keyframes slideInLeft {
+            from { transform: translateX(-150px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        
+        .logo {
+            display: block;
+            margin: 0 auto 25px auto;
+            max-width: 250px;
+            height: auto;
+            opacity: 0;
+            animation: slideInLeft 0.7s var(--timing-function) 0.2s forwards;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        
+        .select-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            opacity: 0;
+            transition: opacity 0.5s;
+        }
+
+        input, button, select { 
+            padding: 15px; 
+            border: 2px solid var(--main-color); 
+            border-radius: 6px; 
+            background-color: var(--input-bg); 
+            color: var(--secondary-color); 
+            font-size: 1em;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        input {
+            flex-grow: 1;
+        }
+
+        #urlInput {
+            opacity: 0;
+            animation: slideInLeft 0.7s var(--timing-function) 0.4s forwards;
+        }
+        
+        select {
+            cursor: pointer;
+            flex-grow: 1;
+            padding: 10px;
+        }
+        
+        button:hover {
+            box-shadow: 0 0 10px var(--main-color);
+        }
+
+        #output {
+            padding: 15px;
+            height: 150px;
+            overflow-y: auto;
+            background-color: #1e1e1e;
+            border-radius: 6px;
+            font-size: 0.8em;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            display: none; 
+        }
+
+        #output.show-logs {
+             display: block;
+        }
+        
+        /* סגנון התקדמות הורדה יפה (Progress Bar) */
+        #download-progress {
+            display: none; 
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 6px;
+            background-color: var(--input-bg);
+            border: 1px solid var(--main-color);
+        }
+        
+        #download-progress.show-progress {
+            display: block;
+        }
+
+        .progress-bar-container {
+            width: 100%;
+            background-color: #333;
+            border-radius: 4px;
+            margin-top: 10px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 20px;
+            width: 0%;
+            background-color: var(--main-color);
+            text-align: center;
+            line-height: 20px;
+            color: white;
+            font-size: 0.9em;
+            transition: width 0.3s ease;
+        }
+        
+        #metadata-display {
+            display: none;
+            padding: 15px;
+            background-color: #1e1e1e;
+            border: 1px solid #333;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            opacity: 0;
+            transition: opacity 0.5s;
+        }
+        
+        #metadata-display.show {
+            display: flex;
+            opacity: 1;
+        }
+        
+        #thumbnail {
+            width: 150px;
+            height: auto;
+            border-radius: 4px;
+            margin-left: 15px;
+            cursor: pointer; 
+            transition: transform 0.2s;
+        }
+
+        #thumbnail:hover {
+            transform: scale(1.05);
+        }
+        
+        #video-info {
+            flex-grow: 1;
+            font-size: 0.9em;
+        }
+        
+        /* --- Settings Modal --- */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 10;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: var(--modal-bg);
+            padding: 30px;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            color: var(--secondary-color);
+            transform: scale(0.8);
+            opacity: 0;
+            transition: opacity 0.3s ease-out, transform 0.3s ease-out;
+        }
+        
+        .modal.show .modal-content {
+            transform: scale(1);
+            opacity: 1;
+        }
+
+        .modal-content label {
+            display: block;
+            margin-top: 15px;
+            font-weight: bold;
+        }
+
+        .modal-content .close-button {
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            color: var(--main-color);
+        }
+
+        .settings-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .settings-button {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            z-index: 5;
+            animation: fadeInScale 0.6s var(--timing-function) forwards;
+        }
+
+        .settings-input-group {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        
+        .settings-input-group input[type="text"] {
+            flex-grow: 1;
+            padding: 10px;
+            cursor: default; 
+            opacity: 1; 
+        }
+        
+        .settings-input-group button {
+            padding: 10px 15px;
+            min-width: 120px;
+        }
+        
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+            margin-left: 10px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: 0.4s;
+            border-radius: 34px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "☀️";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: 0.4s;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+        }
+
+        input:checked + .slider {
+            background-color: var(--main-color);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(26px);
+            content: "🌙";
+        }
+        
+        .checkbox-group {
+            margin-top: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-right: 15px;
+        }
+        
+        .checkbox-group label {
+            margin-left: 0;
+            margin-top: 0;
+            font-weight: bold;
+        }
+
+        .checkbox-group-logs .slider:before {
+            content: "❌";
+        }
+        .checkbox-group-logs input:checked + .slider {
+            background-color: #28a745; 
+        }
+        .checkbox-group-logs input:checked + .slider:before {
+            content: "✅";
+        }
+        
+        /* --- Internal Notification Style --- */
+        #internalNotification {
+            position: fixed; 
+            top: -100px; 
+            left: 50%; 
+            transform: translateX(-50%); 
+            background-color: var(--main-color); 
+            color: var(--secondary-color); 
+            padding: 10px 20px; 
+            border-radius: 0 0 8px 8px; 
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5); 
+            z-index: 1000; 
+            transition: top 0.5s ease-out;
+            display: none;
+            font-weight: bold;
+            text-align: center;
+        }
+
+    </style>
+</head>
+<body>
+    <div id="internalNotification">
+        <span id="notificationBody"></span>
+    </div>
+    
+    <button id="settingsButton" class="settings-button">⚙️</button>
+
+    <div class="container">
+        <img src="logo1.png" alt="TyT Logo" id="appLogo" class="logo">
+
+        <div class="input-group">
+            <input type="text" id="urlInput" placeholder="Paste YouTube Link Here...">
+            <button id="getMetadataButton">Continue ➡️</button>
+        </div>
+        
+        <div id="metadata-display">
+            </div>
+
+        <div class="select-group" id="download-options">
+            <select id="formatSelect">
+                <option value="video">Video (MP4)</option>
+                <option value="audio">Audio (MP3)</option>
+            </select>
+            
+            <select id="qualitySelect">
+                <option value="best">Best Quality (Default)</option>
+            </select>
+            
+            <button id="downloadButton" disabled>Download! 💾</button>
+        </div>
+        
+        <div id="download-progress">
+             <div id="progress-text">Ready to download...</div>
+             <div class="progress-bar-container">
+                 <div id="progressBar" class="progress-bar">0%</div>
+             </div>
+        </div>
+
+        <div id="output">
+            <p>Awaiting download... Ready to go! 🚀</p>
+        </div>
+    </div>
+    
+    <div id="settingsModal" class="modal">
+        <div class="modal-content">
+            <div class="settings-header">
+                <h2>Settings ⚙️</h2>
+                <span class="close-button">&times;</span>
+            </div>
+            
+            <label>Default Download Folder:</label>
+            <div class="settings-input-group">
+                <input type="text" id="downloadPathInput" value="" readonly> 
+                <button id="selectFolderButton">Change Folder 📂</button>
+            </div>
+            
+            <div class="checkbox-group">
+                <label for="darkModeCheckbox">Dark Mode:</label>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="darkModeCheckbox">
+                    <span class="slider"></span>
+                </label>
+            </div>
+            
+            <div class="checkbox-group checkbox-group-logs">
+                <label for="showLogsCheckbox">Show Logs (Debug):</label>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="showLogsCheckbox">
+                    <span class="slider"></span>
+                </label>
+            </div>
+
+            <p id="settings-notification" style="color: var(--main-color); margin-top: 20px;"></p>
+        </div>
+    </div>
+
+    <script>
+        const urlInput = document.getElementById('urlInput');
+        const getMetadataButton = document.getElementById('getMetadataButton');
+        const downloadButton = document.getElementById('downloadButton');
+        const formatSelect = document.getElementById('formatSelect');
+        const qualitySelect = document.getElementById('qualitySelect');
+        const outputDiv = document.getElementById('output');
+        const metadataDisplay = document.getElementById('metadata-display');
+        const downloadOptions = document.getElementById('download-options');
+        const downloadProgress = document.getElementById('download-progress');
+        const progressBar = document.getElementById('progressBar');
+        const progressText = document.getElementById('progress-text');
+        
+        const settingsModal = document.getElementById('settingsModal');
+        const settingsButton = document.getElementById('settingsButton');
+        const closeButton = document.querySelector('.close-button');
+        const selectFolderButton = document.getElementById('selectFolderButton');
+        const downloadPathInput = document.getElementById('downloadPathInput');
+        const darkModeCheckbox = document.getElementById('darkModeCheckbox');
+        const showLogsCheckbox = document.getElementById('showLogsCheckbox');
+        const settingsNotification = document.getElementById('settings-notification');
+        const appLogo = document.getElementById('appLogo');
+        
+        const internalNotification = document.getElementById('internalNotification');
+        const notificationBody = document.getElementById('notificationBody');
+        
+        let currentVideoMetadata = null;
+        let currentSettings = null; 
+
+        function applySettings(settings) {
+            currentSettings = settings;
+            if (settings.darkMode) {
+                document.body.classList.remove('light-mode');
+                appLogo.src = 'logo1.png';
+            } else {
+                document.body.classList.add('light-mode');
+                appLogo.src = 'Logo2.png';
+            }
+
+            if (settings.showLogs) {
+                outputDiv.classList.add('show-logs');
+                downloadProgress.classList.remove('show-progress');
+            } else {
+                outputDiv.classList.remove('show-logs');
+                if (downloadButton.disabled && getMetadataButton.disabled) {
+                    downloadProgress.classList.add('show-progress');
+                } else {
+                    downloadProgress.classList.remove('show-progress');
+                }
+            }
+        }
+
+        function saveSettingsAutomatically() {
+            const newSettings = {
+                downloadPath: downloadPathInput.value,
+                darkMode: darkModeCheckbox.checked,
+                showLogs: showLogsCheckbox.checked
+            };
+            window.tytAPI.saveSettings(newSettings);
+        }
+        
+        window.onload = async () => {
+            const settings = await window.tytAPI.getSettings();
+            settings.showLogs = settings.showLogs !== undefined ? settings.showLogs : false; 
+            applySettings(settings);
+            darkModeCheckbox.checked = settings.darkMode;
+            showLogsCheckbox.checked = settings.showLogs;
+        };
+
+        function resetControls() {
+            getMetadataButton.disabled = false;
+            downloadButton.disabled = true;
+            getMetadataButton.innerHTML = 'Continue ➡️';
+            
+            progressBar.style.width = '0%';
+            progressBar.textContent = '0%';
+            progressText.textContent = 'Ready to download...';
+
+            if (!currentSettings.showLogs) {
+                downloadProgress.classList.remove('show-progress');
+            }
+        }
+        
+        function handleMetadata(url) {
+            outputDiv.innerHTML = '<p>Getting video info... ⏳</p>';
+            getMetadataButton.disabled = true;
+            getMetadataButton.innerHTML = 'Loading...';
+            metadataDisplay.classList.remove('show');
+            downloadOptions.style.opacity = 0;
+            qualitySelect.innerHTML = '<option value="best">Best Quality (Default)</option>';
+            currentVideoMetadata = null; 
+            
+            window.tytAPI.getMetadata(url);
+        }
+
+        function showInternalNotification({ body }) {
+            notificationBody.textContent = body;
+            internalNotification.style.display = 'block';
+            internalNotification.style.top = '0px'; 
+            
+            setTimeout(() => {
+                internalNotification.style.top = '-100px'; 
+                setTimeout(() => {
+                    internalNotification.style.display = 'none';
+                }, 500); 
+            }, 4000); 
+        }
+
+        metadataDisplay.addEventListener('click', (e) => {
+            if (e.target.id === 'thumbnail' && currentVideoMetadata) {
+                window.tytAPI.downloadThumbnail(currentVideoMetadata.thumbnail, currentVideoMetadata.title);
+            }
+        });
+
+        getMetadataButton.addEventListener('click', () => {
+            const url = urlInput.value.trim();
+            if (url) {
+                handleMetadata(url);
+            }
+        });
+        
+        downloadButton.addEventListener('click', () => {
+            const url = urlInput.value.trim();
+            const format = formatSelect.value;
+            const quality = qualitySelect.value;
+
+            if (url) {
+                outputDiv.innerHTML = '<p>Starting download... Please wait... ⏳</p>';
+                downloadButton.disabled = true;
+                getMetadataButton.disabled = true;
+
+                if (!currentSettings.showLogs) {
+                    downloadProgress.classList.add('show-progress');
+                    progressText.textContent = `Starting download: ${currentVideoMetadata.title}`;
+                }
+                
+                window.tytAPI.startDownload(url, format, quality);
+            }
+        });
+        
+        formatSelect.addEventListener('change', () => {
+            if (currentVideoMetadata) {
+                populateQualityOptions(currentVideoMetadata.formats);
+            }
+        });
+
+        window.tytAPI.onMetadataReceived(({ success, data, error }) => {
+            resetControls();
+            if (success) {
+                outputDiv.innerHTML = `<p>Info loaded successfully! 🎬</p>`;
+                currentVideoMetadata = data; 
+                
+                metadataDisplay.innerHTML = `
+                    <div id="video-info">
+                        <h3>${data.title}</h3>
+                        <p>Duration: ${Math.floor(data.duration / 60)}:${(data.duration % 60).toString().padStart(2, '0')}</p>
+                    </div>
+                    <img id="thumbnail" src="${data.thumbnail}" alt="Video Thumbnail">
+                `;
+                metadataDisplay.classList.add('show');
+                downloadOptions.style.opacity = 1;
+                downloadButton.disabled = false;
+                
+                populateQualityOptions(data.formats);
+
+            } else {
+                outputDiv.innerHTML = `<p><span class="error">ERROR: ${error}</span></p>`;
+                metadataDisplay.classList.remove('show');
+                currentVideoMetadata = null;
+            }
+        });
+
+        function populateQualityOptions(formats) {
+            qualitySelect.innerHTML = '';
+            const selectedFormat = formatSelect.value;
+            
+            if (selectedFormat === 'audio') {
+                qualitySelect.innerHTML = `
+                    <option value="128K">128 kbps (Default)</option>
+                    <option value="256K">256 kbps</option>
+                    <option value="320K">320 kbps (Best)</option>
+                `;
+                return;
+            }
+
+            let filteredFormats = formats.filter(f => f.resolution !== 'Audio').sort((a, b) => {
+                const resA = parseInt(a.resolution.replace('p', '')) || 0;
+                const resB = parseInt(b.resolution.replace('p', '')) || 0;
+                return resB - resA;
+            });
+            
+            filteredFormats.forEach(f => {
+                qualitySelect.innerHTML += `
+                    <option value="${f.id}">${f.resolution} - ${f.ext} (${f.note})</option>
+                `;
+            });
+            
+             if (filteredFormats.length === 0) {
+                 qualitySelect.innerHTML = '<option value="best">No video formats found</option>';
+             }
+             
+             if (qualitySelect.options.length > 0) {
+                 qualitySelect.value = filteredFormats[0]?.id || 'best';
+             }
+        }
+
+        settingsButton.addEventListener('click', async () => {
+            const settings = await window.tytAPI.getSettings();
+            settings.showLogs = settings.showLogs !== undefined ? settings.showLogs : false; 
+
+            downloadPathInput.value = settings.downloadPath;
+            darkModeCheckbox.checked = settings.darkMode;
+            showLogsCheckbox.checked = settings.showLogs;
+
+            settingsNotification.textContent = '';
+            settingsModal.style.display = 'flex';
+            setTimeout(() => settingsModal.classList.add('show'), 10);
+        });
+
+        closeButton.addEventListener('click', () => {
+            settingsModal.classList.remove('show');
+            setTimeout(() => settingsModal.style.display = 'none', 300);
+        });
+
+        darkModeCheckbox.addEventListener('change', saveSettingsAutomatically);
+        showLogsCheckbox.addEventListener('change', saveSettingsAutomatically);
+
+        selectFolderButton.addEventListener('click', async () => {
+            const newPath = await window.tytAPI.selectDownloadFolder();
+            if (newPath) {
+                downloadPathInput.value = newPath;
+                saveSettingsAutomatically();
+            }
+        });
+        
+        window.tytAPI.onNotification(({ message }) => {
+            settingsNotification.textContent = message;
+            setTimeout(() => { settingsNotification.textContent = ''; }, 3000);
+        });
+        
+        window.tytAPI.onSettingsUpdated((settings) => {
+            settings.showLogs = settings.showLogs !== undefined ? settings.showLogs : false; 
+            applySettings(settings);
+            darkModeCheckbox.checked = settings.darkMode; 
+            showLogsCheckbox.checked = settings.showLogs;
+        });
+        
+        window.tytAPI.onInternalNotification((data) => {
+            showInternalNotification(data);
+        });
+
+        function updateProgressBar(data) {
+            const progressMatch = data.match(/(\d+\.\d+)%/);
+            const statusMatch = data.match(/(\d+\.\d+% of ~?[\d\w\.]+B at ~?[\d\w\.]+B\/s ETA [\d\w:]+)/);
+            
+            if (progressMatch && progressMatch[1]) {
+                const percent = parseFloat(progressMatch[1]);
+                progressBar.style.width = percent + '%';
+                progressBar.textContent = percent.toFixed(1) + '%';
+            }
+            if (statusMatch && statusMatch[1]) {
+                 progressText.textContent = statusMatch[1].replace(/\s+/g, ' ');
+            }
+        }
+
+        window.tytAPI.onUpdate((data) => {
+            if (currentSettings.showLogs) {
+                outputDiv.innerHTML += `<br>${data}`;
+                outputDiv.scrollTop = outputDiv.scrollHeight;
+            } else {
+                updateProgressBar(data);
+            }
+        });
+
+        window.tytAPI.onError((data) => {
+            if (currentSettings.showLogs) {
+                outputDiv.innerHTML += `<br><span class="error">ERROR: ${data}</span>`;
+                outputDiv.scrollTop = outputDiv.scrollHeight;
+            } else {
+                 progressText.textContent = `Download Error: Check logs! 🚫`;
+                 progressBar.style.width = '100%';
+                 progressBar.textContent = 'ERROR';
+            }
+        });
+        
+        window.tytAPI.onComplete((data) => {
+            if (currentSettings.showLogs) {
+                outputDiv.innerHTML += `<br><span class="success">${data}</span>`;
+                outputDiv.scrollTop = outputDiv.scrollHeight;
+            } else {
+                progressText.textContent = `Download Complete! 🎉`;
+                progressBar.style.width = '100%';
+                progressBar.textContent = '100%';
+            }
+            resetControls(); 
+        });
+
+    </script>
+</body>
+</html>
