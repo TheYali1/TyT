@@ -18,8 +18,7 @@ Welcome to TyT (To Youtube), the tool that lets you download videos, audio, and 
 
 TyT is a program I built using Electron, designed for all of you. It's powered by the mighty **yt-dlp.exe** tool.
 
-![TyTVideo](https://github.com/TheYali1/TyT/blob/main/TyTVideo.gif?raw=true)
-**(Outdated Video!)**
+![TyTPre](https://github.com/TheYali1/TyT/blob/main/TyTVideo.gif?raw=true)
 
 ## **Supported sites 🖼️**
 * **https://github.com/yt-dlp/yt-dlp/blob/master/supportedsites.md**
