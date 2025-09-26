@@ -20,9 +20,6 @@ TyT is a program I built with Electron, designed for all of you. It's powered by
 
 ![TyTPre](https://raw.githubusercontent.com/TheYali1/TyT/refs/heads/main/TyTPre.png)
 
-## **Supported sites 🖼️**
-* **https://github.com/yt-dlp/yt-dlp/blob/master/supportedsites.md**
-
 ## **Troubleshooting 🛠️**
 
 If something's not working, try these things:
