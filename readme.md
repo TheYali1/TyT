@@ -16,7 +16,7 @@ Welcome to TyT (To Youtube), the tool that lets you download videos, audio, and 
 
 ## **What is TyT? 🤔**
 
-TyT is a program I built using Electron, designed for all of you. It's powered by the mighty **yt-dlp.exe** tool.
+TyT is a program I built with Electron, designed for all of you. It's powered by the mighty **yt-dlp.exe** tool.
 
 ![TyTPre](https://raw.githubusercontent.com/TheYali1/TyT/refs/heads/main/TyTPre.png)
 
