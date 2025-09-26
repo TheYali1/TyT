@@ -30,6 +30,7 @@ If something's not working, try these things:
 * **Check Connection**
 * **Update yt-dlp**
 * **Update TyT**
+* **Download ffmpeg**
 
 ## **Credits 🙏**
 
