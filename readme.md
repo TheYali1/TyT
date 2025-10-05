@@ -34,4 +34,7 @@ If something's not working, try these things:
 * **Development:** Yali  
 * **Engine:** [yt-dlp](https://github.com/yt-dlp/yt-dlp)
 
+## **Download TyT Now! 🚀**
+[Click Here To Download The Last Version!](https://github.com/TheYali1/TyT/releases/download/v1.5/TyT.Installer.v1.5.exe)
+
 Enjoy\! 😊
