@@ -1,4 +1,4 @@
-![TyT Logo1](https://raw.githubusercontent.com/TheYali1/TyT/refs/heads/main/TyT.png)
+![TyT Logo1](https://raw.githubusercontent.com/TheYali1/TyT/refs/heads/main/Readme/TyT.png)
 
 <div align="center">
   
@@ -18,7 +18,7 @@ Welcome to TyT (To Youtube), the tool that lets you download videos, audio, and 
 
 TyT is a program I built with Electron, designed for all of you. It's powered by the mighty **yt-dlp.exe** tool.
 
-![TyTPre](https://raw.githubusercontent.com/TheYali1/TyT/refs/heads/main/TyTPre.png)
+![TyTPre](https://raw.githubusercontent.com/TheYali1/TyT/refs/heads/main/Readme/TyTPre.png)
 
 ## **Troubleshooting 🛠️**
 
