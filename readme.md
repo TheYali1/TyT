@@ -12,7 +12,7 @@
 
 # **TyT \- To Youtube 🎬**
 
-Welcome to TyT (To Youtube), the tool that lets you download videos, audio, and thumbnails! from YouTube for free. 💯
+Welcome to TyT (To Youtube), the tool that lets you download videos, audio, and thumbnails! from YouTube for free.
 
 ## **What is TyT? 🤔**
 
